@@ -1,27 +1,45 @@
 package modist.glasschest.common.block;
 
-import modist.glasschest.common.tileentity.GlassChestTileEntity;
-import net.minecraft.block.AbstractGlassBlock;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.ChestBlock;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class GlassChestBlock extends AbstractGlassBlock{
+public class GlassChestBlock extends ChestBlock {
 
 	public GlassChestBlock() {
-		super(Properties.create(Material.GLASS).hardnessAndResistance(0.3F).sound(SoundType.GLASS).notSolid());
+		super(Properties.create(Material.GLASS).hardnessAndResistance(0.3F).sound(SoundType.GLASS).notSolid(),
+				()->BlockLoader.GLASS_CHEST_TILE_ENTITY);
 	}
 	
 	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
+	@OnlyIn(Dist.CLIENT)
+	public float getAmbientOcclusionLightValue(BlockState state, IBlockReader worldIn, BlockPos pos) {
+	      return 1.0F;
+	}
+	
+	@Override
+	public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
+	      return true;
 	}
 
 	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new GlassChestTileEntity();
+	public boolean causesSuffocation(BlockState state, IBlockReader worldIn, BlockPos pos) {
+	      return false;
 	}
 
+	@Override
+	public boolean isNormalCube(BlockState state, IBlockReader worldIn, BlockPos pos) {
+	      return false;
+	}
+
+	@Override
+	public boolean canEntitySpawn(BlockState state, IBlockReader worldIn, BlockPos pos, EntityType<?> type) {
+	      return false;
+	}
 }

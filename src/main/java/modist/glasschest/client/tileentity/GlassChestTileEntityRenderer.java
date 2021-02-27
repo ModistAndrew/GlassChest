@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.tileentity.ChestTileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -17,13 +18,13 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class GlassChestTileEntityRenderer extends TileEntityRenderer<GlassChestTileEntity> {
+public class GlassChestTileEntityRenderer extends ChestTileEntityRenderer<GlassChestTileEntity> {
 
 	public GlassChestTileEntityRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
 		super(rendererDispatcherIn);
 	}
 
-	@Override
+	/*@Override
 	public void render(GlassChestTileEntity tileEntityIn, float partialTicks, MatrixStack matrixStackIn,
 			IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
 			GlStateManager.disableTexture();
@@ -37,6 +38,6 @@ public class GlassChestTileEntityRenderer extends TileEntityRenderer<GlassChestT
 			WorldRenderer.drawBoundingBox(matrixStackIn, buffer, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1);
 			tessellator.draw();
 			
-	}
+	}*/
 	
 }
