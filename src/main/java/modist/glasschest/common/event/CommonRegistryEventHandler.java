@@ -6,13 +6,14 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = GlassChest.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class CommonRegistryEventHandler {
 
-	@SubscribeEvent
+	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onBlocksRegistry(final RegistryEvent.Register<Block> event) {
 		BlockLoader.registerBlocks(event);
 	}

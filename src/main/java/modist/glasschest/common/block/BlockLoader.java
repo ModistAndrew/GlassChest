@@ -1,6 +1,8 @@
 package modist.glasschest.common.block;
 
 import modist.glasschest.GlassChest;
+import modist.glasschest.common.tileentity.GlassChestTileEntity;
+import modist.glasschest.common.tileentity.GlassCubeTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -11,9 +13,11 @@ import net.minecraftforge.event.RegistryEvent;
 public class BlockLoader {
 
 	public static final Block GLASS_CHEST = new GlassChestBlock();
-	//public static final TileEntityType<DiyBlockTileEntity> DIY_BLOCK_TILE_ENTITY = TileEntityType.Builder.create(DiyBlockTileEntity::new, BlockLoader.DIY_BLOCK).build(null);
+	public static final TileEntityType<GlassChestTileEntity> GLASS_CHEST_TILE_ENTITY = 
+	TileEntityType.Builder.create(GlassChestTileEntity::new, BlockLoader.GLASS_CHEST).build(null);
 	public static final Block GLASS_CUBE = new GlassCubeBlock();
-	//public static final TileEntityType<TestTileEntity> TEST_TILE_ENTITY = TileEntityType.Builder.create(TestTileEntity::new, BlockLoader.TEST_BLOCK).build(null);
+	public static final TileEntityType<GlassCubeTileEntity> GLASS_CUBE_TILE_ENTITY = 
+	TileEntityType.Builder.create(GlassCubeTileEntity::new, BlockLoader.GLASS_CUBE).build(null);
 
 	public static void registerBlocks(final RegistryEvent.Register<Block> event) {
 		registerBlock(GLASS_CHEST, "glass_chest", event);
@@ -26,8 +30,8 @@ public class BlockLoader {
 	}
 	
 	public static void registerTileEntities(final RegistryEvent.Register<TileEntityType<?>> event) {
-	//	registerTileEntity(DIY_BLOCK_TILE_ENTITY, "diy_block_tile_entity", event);
-	//	registerTileEntity(TEST_TILE_ENTITY, "test_tile_entity", event);
+		registerTileEntity(GLASS_CHEST_TILE_ENTITY, "glass_chest_tile_entity", event);
+		registerTileEntity(GLASS_CUBE_TILE_ENTITY, "glass_cube_tile_entity", event);
 	}
 
 	private static void registerBlock(Block block, String name, final RegistryEvent.Register<Block> event) {
