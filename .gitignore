@@ -24,3 +24,7 @@ run
 # Files from Forge MDK
 changelog.txt
 /DESKTOP/
+
+#git
+.gitattributes
+.gitignore
