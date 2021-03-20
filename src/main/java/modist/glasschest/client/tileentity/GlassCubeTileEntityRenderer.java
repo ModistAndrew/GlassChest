@@ -26,7 +26,7 @@ public class GlassCubeTileEntityRenderer extends TileEntityRenderer<GlassCubeTil
 	@Override
 	public void render(GlassCubeTileEntity tileEntityIn, float partialTicks, MatrixStack matrixStackIn,
 			IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
-			GlStateManager.disableTexture();
+			/*GlStateManager.disableTexture();
 			RenderHelper.disableStandardItemLighting();
 			GlStateManager.lineWidth(10.0F);
 			GlStateManager.enableBlend();
@@ -35,8 +35,9 @@ public class GlassCubeTileEntityRenderer extends TileEntityRenderer<GlassCubeTil
 			BufferBuilder buffer = tessellator.getBuffer();
 			buffer.begin(1, DefaultVertexFormats.POSITION_COLOR);
 			WorldRenderer.drawBoundingBox(matrixStackIn, buffer, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1);
-			tessellator.draw();
-			
+			tessellator.draw();*/
+			GlassChestTileEntityRenderer.renderContents
+			(matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, tileEntityIn::getStackInSlot);	
 	}
 	
 }

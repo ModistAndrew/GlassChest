@@ -1,43 +1,127 @@
 package modist.glasschest.client.tileentity;
 
-import org.lwjgl.opengl.GL11;
+import java.util.function.Function;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
+
+import modist.glasschest.GlassChest;
 import modist.glasschest.common.tileentity.GlassChestTileEntity;
-import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.ShulkerBoxBlock;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.Atlases;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.Quaternion;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.Vector3f;
+import net.minecraft.client.renderer.entity.model.ShulkerModel;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.model.Material;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.tileentity.ChestTileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.inventory.container.PlayerContainer;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.DyeColor;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.state.properties.ChestType;
+import net.minecraft.tileentity.ShulkerBoxTileEntity;
+import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.model.data.EmptyModelData;
 
 @OnlyIn(Dist.CLIENT)
-public class GlassChestTileEntityRenderer extends ChestTileEntityRenderer<GlassChestTileEntity> {
+public class GlassChestTileEntityRenderer extends TileEntityRenderer<GlassChestTileEntity> {
 
+	private final ShulkerModel<?> model;
+	public static final ResourceLocation GLASS_CHEST_TEXTURE = new ResourceLocation(GlassChest.MODID,
+			"block/glass_chest");
+
+	@SuppressWarnings("rawtypes")
 	public GlassChestTileEntityRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
 		super(rendererDispatcherIn);
+		this.model = new ShulkerModel();
 	}
 
-	/*@Override
+	@Override
 	public void render(GlassChestTileEntity tileEntityIn, float partialTicks, MatrixStack matrixStackIn,
 			IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
-			GlStateManager.disableTexture();
-			RenderHelper.disableStandardItemLighting();
-			GlStateManager.lineWidth(10.0F);
-			GlStateManager.enableBlend();
-			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			Tessellator tessellator = Tessellator.getInstance();
-			BufferBuilder buffer = tessellator.getBuffer();
-			buffer.begin(1, DefaultVertexFormats.POSITION_COLOR);
-			WorldRenderer.drawBoundingBox(matrixStackIn, buffer, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1);
-			tessellator.draw();
-			
-	}*/
+		renderBase(matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, model, -tileEntityIn.getLidAngle(partialTicks));
+		renderContents(matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, tileEntityIn::getStackInSlot);
+	}
+
+	private static BlockPos getPosFromIndex(int index) {
+		return new BlockPos(index / 9, index % 9 / 3, index % 9 % 3);
+	}
+
+	private static float diffFunction(long time, long delta, float scale) {
+		long dt = time % (delta * 2);
+		if (dt > delta) {
+			dt = 2 * delta - dt;
+		}
+		return dt * scale;
+	}
 	
+	public static void renderBase(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, 
+			int combinedLightIn, int combinedOverlayIn, ShulkerModel<?> model, float lid) {
+		matrixStackIn.push();
+		Direction direction = Direction.UP;
+		Material material = new Material(PlayerContainer.LOCATION_BLOCKS_TEXTURE, GLASS_CHEST_TEXTURE);
+		matrixStackIn.translate(0.5D, 0.5D, 0.5D);
+		matrixStackIn.scale(0.9995F, 0.9995F, 0.9995F);
+		matrixStackIn.rotate(direction.getRotation());
+		matrixStackIn.scale(1.0F, -1.0F, -1.0F);
+		matrixStackIn.translate(0.0D, -1.0D, 0.0D);
+		IVertexBuilder ivertexbuilder = material.getBuffer(bufferIn, RenderType::getEntityCutout);
+		model.getBase().render(matrixStackIn, ivertexbuilder, combinedLightIn, combinedOverlayIn);
+		matrixStackIn.translate(0.0D, (double) (lid * 0.5F), 0.0D);
+		matrixStackIn.rotate(Vector3f.YP.rotationDegrees(270.0F * lid));
+		model.getLid().render(matrixStackIn, ivertexbuilder, combinedLightIn, combinedOverlayIn);
+		matrixStackIn.pop();
+	}
+	
+	public static void renderContents(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, 
+			int combinedLightIn, int combinedOverlayIn, Function<Integer, ItemStack> itemStackProvider) {
+		matrixStackIn.push();
+		matrixStackIn.translate(0.5D, 0.5D, 0.5D);
+		matrixStackIn.scale(0.995F, 0.995F, 0.995F);
+		//matrixStackIn.translate(-0.5D/0.95F, -0.5D/0.95F, -0.5D/0.95F);
+		matrixStackIn.scale(1F / 3, 1F / 3, 1F / 3);
+		for (int i = 0; i < 27; i++) {
+			BlockPos renderPos = getPosFromIndex(i);
+			matrixStackIn.push();
+			matrixStackIn.translate(-1.5D, -1.5D, -1.5D);
+			matrixStackIn.translate(renderPos.getX(), renderPos.getY(), renderPos.getZ());
+			ItemStack itemStack = itemStackProvider.apply(i);
+			Item item = itemStack.getItem();
+			if (item instanceof BlockItem) {
+				BlockItem blockItem = (BlockItem) item;
+				Minecraft.getInstance().getBlockRendererDispatcher().renderBlock(blockItem.getBlock().getDefaultState(),
+						matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
+			} else {
+				long time = System.currentTimeMillis();
+				float angle = (time / 100) % 360;
+				Quaternion rotation = Vector3f.YP.rotationDegrees(angle);
+				float trans = diffFunction(time, 1000, 0.0002F);
+				matrixStackIn.scale(0.8F, 0.8F, 0.8F);
+				matrixStackIn.translate(0.5F, 0.55F, 0.5F);
+				matrixStackIn.translate(0, trans, 0);
+				matrixStackIn.rotate(rotation);
+				Minecraft.getInstance().getItemRenderer().renderItem(itemStack,
+						ItemCameraTransforms.TransformType.FIXED, combinedLightIn, combinedOverlayIn, matrixStackIn,
+						bufferIn);
+			}
+			matrixStackIn.pop();
+		}
+		matrixStackIn.pop();
+	}
+
 }
