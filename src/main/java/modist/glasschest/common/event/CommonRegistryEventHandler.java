@@ -5,7 +5,6 @@ import modist.glasschest.common.block.BlockLoader;
 import modist.glasschest.common.recipe.GlassCubeCraftingRecipe;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
-import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.SpecialRecipeSerializer;
 import net.minecraft.tileentity.TileEntityType;

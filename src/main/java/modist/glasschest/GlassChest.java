@@ -29,12 +29,4 @@ public class GlassChest {
 		
 	}
 
-	//TODO
-	//1.套娃
-	//2.light
-	//3.方块贴合修整
-	//4.glasscube物品
-	//5.合成表
-	//6.物品shrink处理
-	//7.cullface?
 }

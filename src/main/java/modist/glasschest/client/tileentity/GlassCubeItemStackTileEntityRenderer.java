@@ -2,15 +2,13 @@ package modist.glasschest.client.tileentity;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 
-import modist.glasschest.common.tileentity.GlassCubeTileEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.model.ShulkerModel;
-import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
-import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.NonNullList;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public class GlassCubeItemStackTileEntityRenderer extends GlassChestItemStackTileEntityRenderer {
 	
 	private final ShulkerModel<?> model;
