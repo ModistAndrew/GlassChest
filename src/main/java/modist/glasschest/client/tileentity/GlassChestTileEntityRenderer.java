@@ -6,6 +6,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 
 import modist.glasschest.GlassChest;
+import modist.glasschest.common.block.BlockLoader;
 import modist.glasschest.common.tileentity.GlassChestTileEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShulkerBoxBlock;
@@ -23,14 +24,17 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.tileentity.ChestTileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.ChestType;
 import net.minecraft.tileentity.ShulkerBoxTileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -55,7 +59,7 @@ public class GlassChestTileEntityRenderer extends TileEntityRenderer<GlassChestT
 	public void render(GlassChestTileEntity tileEntityIn, float partialTicks, MatrixStack matrixStackIn,
 			IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
 		renderBase(matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, model, -tileEntityIn.getLidAngle(partialTicks));
-		renderContents(matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, tileEntityIn::getStackInSlot);
+		renderContents(matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, tileEntityIn::getStackInSlot, model);
 	}
 
 	private static BlockPos getPosFromIndex(int index) {
@@ -70,13 +74,14 @@ public class GlassChestTileEntityRenderer extends TileEntityRenderer<GlassChestT
 		return dt * scale;
 	}
 	
+	//the base of glass chest
 	public static void renderBase(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, 
 			int combinedLightIn, int combinedOverlayIn, ShulkerModel<?> model, float lid) {
 		matrixStackIn.push();
 		Direction direction = Direction.UP;
 		Material material = new Material(PlayerContainer.LOCATION_BLOCKS_TEXTURE, GLASS_CHEST_TEXTURE);
 		matrixStackIn.translate(0.5D, 0.5D, 0.5D);
-		matrixStackIn.scale(0.9995F, 0.9995F, 0.9995F);
+		matrixStackIn.scale(0.99995F, 0.99995F, 0.99995F);
 		matrixStackIn.rotate(direction.getRotation());
 		matrixStackIn.scale(1.0F, -1.0F, -1.0F);
 		matrixStackIn.translate(0.0D, -1.0D, 0.0D);
@@ -88,11 +93,12 @@ public class GlassChestTileEntityRenderer extends TileEntityRenderer<GlassChestT
 		matrixStackIn.pop();
 	}
 	
+	//for tileentity
 	public static void renderContents(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, 
-			int combinedLightIn, int combinedOverlayIn, Function<Integer, ItemStack> itemStackProvider) {
+			int combinedLightIn, int combinedOverlayIn, Function<Integer, ItemStack> itemStackProvider, ShulkerModel<?> model) {
 		matrixStackIn.push();
 		matrixStackIn.translate(0.5D, 0.5D, 0.5D);
-		matrixStackIn.scale(0.995F, 0.995F, 0.995F);
+		matrixStackIn.scale(0.9995F, 0.9995F, 0.9995F);
 		//matrixStackIn.translate(-0.5D/0.95F, -0.5D/0.95F, -0.5D/0.95F);
 		matrixStackIn.scale(1F / 3, 1F / 3, 1F / 3);
 		for (int i = 0; i < 27; i++) {
@@ -104,8 +110,16 @@ public class GlassChestTileEntityRenderer extends TileEntityRenderer<GlassChestT
 			Item item = itemStack.getItem();
 			if (item instanceof BlockItem) {
 				BlockItem blockItem = (BlockItem) item;
+				if(blockItem.getBlock().equals(BlockLoader.GLASS_CHEST)) {
+					renderContents(itemStack, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, model);
+					renderBase(matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, model, 0);
+				} else if (blockItem.getBlock().equals(BlockLoader.GLASS_CUBE)) {
+					renderContents(itemStack, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, model);
+					GlassCubeTileEntityRenderer.renderBase(bufferIn, itemStack, matrixStackIn, combinedLightIn, combinedOverlayIn);
+				} else {
 				Minecraft.getInstance().getBlockRendererDispatcher().renderBlock(blockItem.getBlock().getDefaultState(),
 						matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
+				}
 			} else {
 				long time = System.currentTimeMillis();
 				float angle = (time / 100) % 360;
@@ -123,5 +137,19 @@ public class GlassChestTileEntityRenderer extends TileEntityRenderer<GlassChestT
 		}
 		matrixStackIn.pop();
 	}
+	
+	//for item
+	public static void renderContents(ItemStack itemStackIn, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn,
+			int combinedLightIn, int combinedOverlayIn, ShulkerModel<?> model) {
+		NonNullList<ItemStack> nonnulllist = NonNullList.withSize(27, ItemStack.EMPTY);
+		CompoundNBT compoundnbt = itemStackIn.getChildTag("BlockEntityTag");
+		if (compoundnbt != null) {
+			if (compoundnbt.contains("Items", 9)) {
+				ItemStackHelper.loadAllItems(compoundnbt, nonnulllist);
+				}
+		}
+		renderContents(matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, i -> nonnulllist.get(i), model);
+	}
+		
 
 }

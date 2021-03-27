@@ -20,4 +20,5 @@ public class GlassCubeBlock extends GlassChestBlock{
 	public TileEntity createNewTileEntity(IBlockReader worldIn) {
 		return new GlassCubeTileEntity();
 	}
+	
 }

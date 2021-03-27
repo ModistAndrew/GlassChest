@@ -2,6 +2,7 @@ package modist.glasschest.client.tileentity;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 
+import modist.glasschest.common.tileentity.GlassCubeTileEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.model.ShulkerModel;
 import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
@@ -12,18 +13,20 @@ import net.minecraft.util.NonNullList;
 
 public class GlassCubeItemStackTileEntityRenderer extends GlassChestItemStackTileEntityRenderer {
 	
+	private final ShulkerModel<?> model;
+
+	@SuppressWarnings("rawtypes")
+	public GlassCubeItemStackTileEntityRenderer() {
+		super();
+		this.model = new ShulkerModel();
+	}
+	
 	@Override
 	public void render(ItemStack itemStackIn, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn,
 			int combinedLightIn, int combinedOverlayIn) {
-		NonNullList<ItemStack> nonnulllist = NonNullList.withSize(27, ItemStack.EMPTY);
-		CompoundNBT compoundnbt = itemStackIn.getChildTag("BlockEntityTag");
-		if (compoundnbt != null) {
-			if (compoundnbt.contains("Items", 9)) {
-				ItemStackHelper.loadAllItems(compoundnbt, nonnulllist);
-				}
-		}
+		GlassCubeTileEntityRenderer.renderBase(bufferIn, itemStackIn, matrixStackIn, combinedLightIn, combinedOverlayIn);
 		GlassChestTileEntityRenderer.renderContents
-		(matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, i -> nonnulllist.get(i));
-	}
+		(itemStackIn, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, model);
+		}
 	
 }

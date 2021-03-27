@@ -22,15 +22,9 @@ public class GlassChestItemStackTileEntityRenderer extends ItemStackTileEntityRe
 	@Override
 	public void render(ItemStack itemStackIn, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn,
 			int combinedLightIn, int combinedOverlayIn) {
-		NonNullList<ItemStack> nonnulllist = NonNullList.withSize(27, ItemStack.EMPTY);
-		CompoundNBT compoundnbt = itemStackIn.getChildTag("BlockEntityTag");
-		if (compoundnbt != null) {
-			if (compoundnbt.contains("Items", 9)) {
-				ItemStackHelper.loadAllItems(compoundnbt, nonnulllist);
-				}
-		}
 		GlassChestTileEntityRenderer.renderBase(matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, model, 0);
 		GlassChestTileEntityRenderer.renderContents
-		(matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, i -> nonnulllist.get(i));
+		(itemStackIn, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, model);
 	}
+
 }

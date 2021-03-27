@@ -26,6 +26,8 @@ import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.state.IntegerProperty;
+import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.ChestType;
 import net.minecraft.stats.Stats;
 import net.minecraft.tileentity.ChestTileEntity;
@@ -48,16 +50,32 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class GlassChestBlock extends ChestBlock {
+	
+	public static final IntegerProperty LIGHT = IntegerProperty.create("light", 0, 15);
 
 	protected GlassChestBlock(Supplier<TileEntityType<? extends ChestTileEntity>> tileEntityTypeIn) {
 		super(Properties.create(Material.GLASS).hardnessAndResistance(0.3F).sound(SoundType.GLASS).notSolid(),
 				tileEntityTypeIn);
+		this.setDefaultState(this.stateContainer.getBaseState().with(LIGHT, 0));
 	}
 	
 	public GlassChestBlock() {
 		super(Properties.create(Material.GLASS).hardnessAndResistance(0.3F).sound(SoundType.GLASS).notSolid(),
 				() -> BlockLoader.GLASS_CHEST_TILE_ENTITY);
+		this.setDefaultState(this.stateContainer.getBaseState().with(LIGHT, 0));
 	}
+	
+	@Override
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+        builder.add(LIGHT);
+        super.fillStateContainer(builder);
+    }
+	
+	@Override
+	public int getLightValue(BlockState state)
+    {
+		return state.get(LIGHT);
+    }
 	
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {

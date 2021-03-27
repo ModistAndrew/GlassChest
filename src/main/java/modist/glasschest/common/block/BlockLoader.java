@@ -10,6 +10,7 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.Properties;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 
 public class BlockLoader {
@@ -17,9 +18,14 @@ public class BlockLoader {
 	public static final Block GLASS_CHEST = new GlassChestBlock();
 	public static final TileEntityType<GlassChestTileEntity> GLASS_CHEST_TILE_ENTITY = 
 			TileEntityType.Builder.create(GlassChestTileEntity::new, BlockLoader.GLASS_CHEST).build(null);
+	public static final Item GLASS_CHEST_ITEM = new BlockItem(GLASS_CHEST, 
+			new Properties().maxStackSize(1).setISTER(()->()->new GlassChestItemStackTileEntityRenderer()));
 	public static final Block GLASS_CUBE = new GlassCubeBlock();
 	public static final TileEntityType<GlassCubeTileEntity> GLASS_CUBE_TILE_ENTITY = 
 			TileEntityType.Builder.create(GlassCubeTileEntity::new, BlockLoader.GLASS_CUBE).build(null);
+	public static final Item GLASS_CUBE_ITEM = new BlockItem(GLASS_CUBE, 
+			new Properties().maxStackSize(1).setISTER(()->()->new GlassCubeItemStackTileEntityRenderer()));
+	
 
 	public static void registerBlocks(final RegistryEvent.Register<Block> event) {
 		registerBlock(GLASS_CHEST, "glass_chest", event);
@@ -27,12 +33,8 @@ public class BlockLoader {
 	}
 
 	public static void registerBlockItems(final RegistryEvent.Register<Item> event) {
-		//registerBlockItem(GLASS_CHEST, event);
-		event.getRegistry().register(new BlockItem(GLASS_CHEST, 
-				new Properties().maxStackSize(1).setISTER(()->()->new GlassChestItemStackTileEntityRenderer())).setRegistryName(GLASS_CHEST.getRegistryName()));
-		event.getRegistry().register(new BlockItem(GLASS_CUBE, 
-				new Properties().maxStackSize(1).setISTER(()->()->new GlassCubeItemStackTileEntityRenderer())).setRegistryName(GLASS_CUBE.getRegistryName()));
-		
+		registerBlockItem(GLASS_CHEST_ITEM, GLASS_CHEST.getRegistryName(), event);
+		registerBlockItem(GLASS_CUBE_ITEM, GLASS_CUBE.getRegistryName(), event);
 	}
 	
 	public static void registerTileEntities(final RegistryEvent.Register<TileEntityType<?>> event) {
@@ -46,8 +48,9 @@ public class BlockLoader {
 
 	}
 
-	private static void registerBlockItem(Block block, final RegistryEvent.Register<Item> event) {
-		event.getRegistry().register(new BlockItem(block, new Properties()).setRegistryName(block.getRegistryName()));
+	private static void registerBlockItem(Item item, ResourceLocation name, final RegistryEvent.Register<Item> event) {
+		item.setRegistryName(name);
+		event.getRegistry().register(item);
 	}
 	
 	private static void registerTileEntity(TileEntityType<?> tileentitytype, String name, final RegistryEvent.Register<TileEntityType<?>> event) {
