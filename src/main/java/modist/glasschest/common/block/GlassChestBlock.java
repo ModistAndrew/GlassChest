@@ -26,6 +26,7 @@ import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
@@ -151,6 +152,8 @@ public class GlassChestBlock extends ChestBlock {
 				if (EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, 
 						player.getHeldItem(player.getActiveHand())) == 0 && !player.isCreative()) {
 					InventoryHelper.dropInventoryItems(worldIn, pos, (IInventory)tileEntity);	
+					InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getX(), pos.getX(), 
+							new ItemStack(Items.SHULKER_SHELL, 2));
 				} else {
 				CompoundNBT compoundNbt = glassChestTileEntity.write(new CompoundNBT());
 				if (!compoundNbt.isEmpty()) {
