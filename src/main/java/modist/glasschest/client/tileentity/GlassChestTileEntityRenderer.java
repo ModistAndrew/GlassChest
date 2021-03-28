@@ -53,7 +53,7 @@ public class GlassChestTileEntityRenderer extends TileEntityRenderer<GlassChestT
 	}
 
 	private static BlockPos getPosFromIndex(int index) {
-		return new BlockPos(2 - index / 9, index % 9 / 3, 2 - index % 9 % 3);
+		return new BlockPos(2 - index / 9, index % 9 / 3, index % 9 % 3);
 	}
 
 	private static float diffFunction(long time, long delta, float scale) {

@@ -1,4 +1,5 @@
 {
   "block.glasschest.glass_chest": "Glass Chest",
-  "block.glasschest.glass_cube": "Glass Cube"
+  "block.glasschest.glass_cube": "Glass Cube",
+  "itemGroup.glass_chest_group": "Glass Chest"
 }

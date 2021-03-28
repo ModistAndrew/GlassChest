@@ -56,7 +56,7 @@ public class GlassChestBlock extends ChestBlock {
 	protected GlassChestBlock(Supplier<TileEntityType<? extends ChestTileEntity>> tileEntityTypeIn) {
 		super(Properties.create(Material.GLASS).hardnessAndResistance(0.3F).sound(SoundType.GLASS).notSolid(),
 				tileEntityTypeIn);
-		this.setDefaultState(this.stateContainer.getBaseState().with(LIGHT, 0));
+		this.setDefaultState(this.stateContainer.getBaseState().with(LIGHT, 0).with(FACING, Direction.NORTH).with(TYPE, ChestType.SINGLE).with(WATERLOGGED, Boolean.valueOf(false)));
 	}
 	
 	public GlassChestBlock() {
