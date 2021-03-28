@@ -89,7 +89,6 @@ public class GlassChestTileEntityRenderer extends TileEntityRenderer<GlassChestT
 		matrixStackIn.push();
 		matrixStackIn.translate(0.5D, 0.5D, 0.5D);
 		matrixStackIn.scale(0.9995F, 0.9995F, 0.9995F);
-		//matrixStackIn.translate(-0.5D/0.95F, -0.5D/0.95F, -0.5D/0.95F);
 		matrixStackIn.scale(1F / 3, 1F / 3, 1F / 3);
 		for (int i = 0; i < 27; i++) {
 			BlockPos renderPos = getPosFromIndex(i);

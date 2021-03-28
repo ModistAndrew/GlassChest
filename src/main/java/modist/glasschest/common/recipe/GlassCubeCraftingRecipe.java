@@ -72,6 +72,9 @@ public class GlassCubeCraftingRecipe extends SpecialRecipe {
 			CompoundNBT nbt = core.getChildTag("BlockEntityTag");
 			if (nbt == null) {
 				nbt = new CompoundNBT();
+				for(Direction d : Direction.values()) {
+					nbt.putInt(d.getName(), 1);
+				}
 			} else {
 				nbt = nbt.copy();
 			}
