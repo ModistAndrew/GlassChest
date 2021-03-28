@@ -126,7 +126,6 @@ public class GlassCubeCraftingRecipe extends SpecialRecipe {
 			}
 		}
 
-		nonnulllist.set(0, new ItemStack(Items.SHEARS));
 		return nonnulllist;
 	}
 

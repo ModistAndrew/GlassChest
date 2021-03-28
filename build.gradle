@@ -6,7 +6,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-       classpath group: 'com.otakusaikou.fgcn', name: 'ForgeGradleCN', version: '3.+', changing: true
+       classpath group:'com.otakusaikou.fgcn', name: 'ForgeGradleCN', version: '3.+', changing: true
     }
 }
 apply plugin: 'com.otakusaikou.fgcn'
@@ -14,7 +14,7 @@ apply plugin: 'com.otakusaikou.fgcn'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '0.1'
+version = '1.0'
 group = 'modist.glasschest' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'glasschest'
 

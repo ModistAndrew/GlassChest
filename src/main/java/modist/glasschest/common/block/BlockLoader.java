@@ -3,6 +3,7 @@ package modist.glasschest.common.block;
 import modist.glasschest.GlassChest;
 import modist.glasschest.client.tileentity.GlassChestItemStackTileEntityRenderer;
 import modist.glasschest.client.tileentity.GlassCubeItemStackTileEntityRenderer;
+import modist.glasschest.common.itemgroup.GlassChestGroup;
 import modist.glasschest.common.tileentity.GlassChestTileEntity;
 import modist.glasschest.common.tileentity.GlassCubeTileEntity;
 import net.minecraft.block.Block;
@@ -19,12 +20,12 @@ public class BlockLoader {
 	public static final TileEntityType<GlassChestTileEntity> GLASS_CHEST_TILE_ENTITY = 
 			TileEntityType.Builder.create(GlassChestTileEntity::new, BlockLoader.GLASS_CHEST).build(null);
 	public static final Item GLASS_CHEST_ITEM = new BlockItem(GLASS_CHEST, 
-			new Properties().maxStackSize(1).setISTER(()->()->new GlassChestItemStackTileEntityRenderer()));
+			new Properties().group(GlassChestGroup.GLASS_CHEST_GROUP).maxStackSize(1).setISTER(()->()->new GlassChestItemStackTileEntityRenderer()));
 	public static final Block GLASS_CUBE = new GlassCubeBlock();
 	public static final TileEntityType<GlassCubeTileEntity> GLASS_CUBE_TILE_ENTITY = 
 			TileEntityType.Builder.create(GlassCubeTileEntity::new, BlockLoader.GLASS_CUBE).build(null);
 	public static final Item GLASS_CUBE_ITEM = new BlockItem(GLASS_CUBE, 
-			new Properties().maxStackSize(1).setISTER(()->()->new GlassCubeItemStackTileEntityRenderer()));
+			new Properties().group(GlassChestGroup.GLASS_CHEST_GROUP).maxStackSize(1).setISTER(()->()->new GlassCubeItemStackTileEntityRenderer()));
 	
 
 	public static void registerBlocks(final RegistryEvent.Register<Block> event) {
