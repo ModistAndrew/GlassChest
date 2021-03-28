@@ -152,7 +152,7 @@ public class GlassChestBlock extends ChestBlock {
 				if (EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, 
 						player.getHeldItem(player.getActiveHand())) == 0 && !player.isCreative()) {
 					InventoryHelper.dropInventoryItems(worldIn, pos, (IInventory)tileEntity);	
-					InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getX(), pos.getX(), 
+					InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), 
 							new ItemStack(Items.SHULKER_SHELL, 2));
 				} else {
 				CompoundNBT compoundNbt = glassChestTileEntity.write(new CompoundNBT());
