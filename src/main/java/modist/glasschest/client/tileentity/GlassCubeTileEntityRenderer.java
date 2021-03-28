@@ -63,6 +63,9 @@ public class GlassCubeTileEntityRenderer extends TileEntityRenderer<GlassCubeTil
 		if(compoundnbt!=null) {
 		renderBase(bufferIn, 
 		d -> GlassCubeTileEntity.GLASSES[compoundnbt.getInt(d.getName())], matrixStackIn, combinedLightIn, combinedOverlayIn);
+		} else {
+		renderBase(bufferIn, 
+		d -> GlassCubeTileEntity.GLASSES[1], matrixStackIn, combinedLightIn, combinedOverlayIn);	
 		}
 	}
 	
