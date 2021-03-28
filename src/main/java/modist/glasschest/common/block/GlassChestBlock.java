@@ -63,7 +63,7 @@ public class GlassChestBlock extends ChestBlock {
 	public GlassChestBlock() {
 		super(Properties.create(Material.GLASS).hardnessAndResistance(0.3F).sound(SoundType.GLASS).notSolid(),
 				() -> BlockLoader.GLASS_CHEST_TILE_ENTITY);
-		this.setDefaultState(this.stateContainer.getBaseState().with(LIGHT, 0));
+		this.setDefaultState(this.stateContainer.getBaseState().with(LIGHT, 0).with(FACING, Direction.NORTH).with(TYPE, ChestType.SINGLE).with(WATERLOGGED, Boolean.valueOf(false)));
 	}
 	
 	@Override
@@ -100,10 +100,9 @@ public class GlassChestBlock extends ChestBlock {
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		ChestType chesttype = ChestType.SINGLE;
-		Direction direction = context.getPlacementHorizontalFacing().getOpposite();
-		IFluidState ifluidstate = context.getWorld().getFluidState(context.getPos());
+		Direction direction = Direction.NORTH;
 		return this.getDefaultState().with(FACING, direction).with(TYPE, chesttype).with(WATERLOGGED,
-				Boolean.valueOf(ifluidstate.getFluid() == Fluids.WATER));
+				Boolean.valueOf(false));
 	}
 
 	@Override
