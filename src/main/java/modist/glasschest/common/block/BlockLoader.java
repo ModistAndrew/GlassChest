@@ -12,20 +12,23 @@ import net.minecraft.item.Item;
 import net.minecraft.item.Item.Properties;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.loading.FMLCommonLaunchHandler;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 
 public class BlockLoader {
 
 	public static final Block GLASS_CHEST = new GlassChestBlock();
 	public static final TileEntityType<GlassChestTileEntity> GLASS_CHEST_TILE_ENTITY = 
 			TileEntityType.Builder.create(GlassChestTileEntity::new, BlockLoader.GLASS_CHEST).build(null);
-	public static final Item GLASS_CHEST_ITEM = new BlockItem(GLASS_CHEST, 
-			new Properties().group(GlassChestGroup.GLASS_CHEST_GROUP).maxStackSize(1).setISTER(()->()->new GlassChestItemStackTileEntityRenderer()));
+	public static Item GLASS_CHEST_ITEM;
 	public static final Block GLASS_CUBE = new GlassCubeBlock();
 	public static final TileEntityType<GlassCubeTileEntity> GLASS_CUBE_TILE_ENTITY = 
 			TileEntityType.Builder.create(GlassCubeTileEntity::new, BlockLoader.GLASS_CUBE).build(null);
-	public static final Item GLASS_CUBE_ITEM = new BlockItem(GLASS_CUBE, 
-			new Properties().group(GlassChestGroup.GLASS_CHEST_GROUP).maxStackSize(1).setISTER(()->()->new GlassCubeItemStackTileEntityRenderer()));
+	public static Item GLASS_CUBE_ITEM;
 	
 
 	public static void registerBlocks(final RegistryEvent.Register<Block> event) {
@@ -34,9 +37,29 @@ public class BlockLoader {
 	}
 
 	public static void registerBlockItems(final RegistryEvent.Register<Item> event) {
+		Properties pro1 = new Properties().group(GlassChestGroup.GLASS_CHEST_GROUP).maxStackSize(1);
+		if(FMLEnvironment.dist.equals(Dist.CLIENT)) {
+			addISTER(pro1, true);
+		}
+		GLASS_CHEST_ITEM = new BlockItem(GLASS_CHEST, pro1);
 		registerBlockItem(GLASS_CHEST_ITEM, GLASS_CHEST.getRegistryName(), event);
+		Properties pro2 = new Properties().group(GlassChestGroup.GLASS_CHEST_GROUP).maxStackSize(1);
+		if(FMLEnvironment.dist.equals(Dist.CLIENT)) {
+			addISTER(pro2, false);
+		}
+		GLASS_CUBE_ITEM = new BlockItem(GLASS_CUBE, pro2);
 		registerBlockItem(GLASS_CUBE_ITEM, GLASS_CUBE.getRegistryName(), event);
 	}
+		
+	@OnlyIn(Dist.CLIENT)
+	public static void addISTER(Properties pro, boolean flag) {
+		if(flag) {
+			pro.setISTER(()->()->new GlassChestItemStackTileEntityRenderer());
+		} else {
+			pro.setISTER(()->()->new GlassCubeItemStackTileEntityRenderer());
+		}
+	}
+	
 	
 	public static void registerTileEntities(final RegistryEvent.Register<TileEntityType<?>> event) {
 		registerTileEntity(GLASS_CHEST_TILE_ENTITY, "glass_chest_tile_entity", event);
